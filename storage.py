@@ -11,6 +11,7 @@ from threading import Lock
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 DB_FILE = os.path.join(DATA_DIR, "db.json")
 _lock = Lock()
+_cached_db = None
 
 DEFAULT_DB = {
     "scans": [],            # list of scan dicts
@@ -29,16 +30,21 @@ def _ensure_db():
 
 
 def load_db() -> dict:
+    global _cached_db
     _ensure_db()
     with _lock:
-        with open(DB_FILE, "r") as f:
-            return json.load(f)
+        if _cached_db is None:
+            with open(DB_FILE, "r") as f:
+                _cached_db = json.load(f)
+        return _cached_db
 
 
 def save_db(db: dict):
+    global _cached_db
     with _lock:
         with open(DB_FILE, "w") as f:
             json.dump(db, f, indent=2, default=str)
+        _cached_db = db
 
 
 def add_scan(scan: dict) -> dict:

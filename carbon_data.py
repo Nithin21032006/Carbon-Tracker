@@ -7,6 +7,8 @@ style averages). These are reasonable estimates for a consumer-facing tool,
 not laboratory-grade figures — the app is upfront about that in the UI copy.
 """
 
+from functools import lru_cache
+
 # kg CO2e per kg of product, "farm to retail" average
 EMISSION_FACTORS = {
     # Meat & fish — highest impact category
@@ -178,6 +180,7 @@ REDUCTION_TIPS = {
 }
 
 
+@lru_cache(maxsize=256)
 def classify_item(item_name: str) -> tuple[str, float]:
     """
     Given a free-text item name from receipt OCR, find the closest known

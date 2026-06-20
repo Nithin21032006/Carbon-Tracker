@@ -12,7 +12,7 @@
   --moss: #3D5A3D;
   --moss-light: #5C7D5C;
   --terracotta: #B5521E;
-  --gray: #706A5F;
+  --gray: #6B655A;
   --gold: #D4AF37;
   --purple: #6B4C8A;
   --blue: #4A6B8A;
@@ -72,13 +72,13 @@ body {
   letter-spacing: 1px;
   font-size: 15px;
 }
-.brand-sub { color: var(--gray); font-weight: 400; }
+.brand-sub { color: #A8A397; font-weight: 400; }
 .main-nav { display: flex; gap: 28px; }
 .main-nav a {
   font-family: var(--mono);
   font-size: 13px;
   letter-spacing: 0.5px;
-  color: var(--gray);
+  color: #A8A397;
   padding: 6px 2px;
   border-bottom: 2px solid transparent;
   transition: color 0.15s, border-color 0.15s;

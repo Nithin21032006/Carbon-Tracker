@@ -131,6 +131,7 @@ def test_storage_db():
         test_db_file = os.path.join(tmpdir, "test_db.json")
         storage.DB_FILE = test_db_file
         storage.DATA_DIR = tmpdir
+        storage._cached_db = None
 
         # Verifies database initializes with template dictionary defaults
         db = storage.load_db()

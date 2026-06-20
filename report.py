@@ -48,11 +48,18 @@ def build_weekly_report_data() -> dict:
     earned_badges = storage.get_earned_badges()
     badge_details = [b for b in gamification.BADGES if b["id"] in earned_badges]
 
+    # Group scans by date to avoid nested O(N) loops during daily breakdown generation
+    scans_by_date = {}
+    for s in all_scans:
+        dt = s["scanned_at"][:10]
+        scans_by_date[dt] = scans_by_date.get(dt, 0.0) + s["total_co2e_kg"]
+
     # daily breakdown for the little 7-day bar strip
     daily_totals = []
     for i in range(6, -1, -1):
         d = today - timedelta(days=i)
-        day_total = sum(s["total_co2e_kg"] for s in all_scans if s["scanned_at"][:10] == d.isoformat())
+        iso = d.isoformat()
+        day_total = scans_by_date.get(iso, 0.0)
         daily_totals.append({"date": d.strftime("%a"), "co2": round(day_total, 2)})
 
     return {

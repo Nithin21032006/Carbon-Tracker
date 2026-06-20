@@ -13,8 +13,10 @@ def client():
         test_db_file = os.path.join(tmpdir, "test_db.json")
         orig_db = storage.DB_FILE
         orig_dir = storage.DATA_DIR
+        orig_cache = storage._cached_db
         storage.DB_FILE = test_db_file
         storage.DATA_DIR = tmpdir
+        storage._cached_db = None
 
         # Put Flask app in testing mode
         app.config["TESTING"] = True
@@ -24,6 +26,7 @@ def client():
         # Restore database configuration
         storage.DB_FILE = orig_db
         storage.DATA_DIR = orig_dir
+        storage._cached_db = orig_cache
 
 
 def test_pages_load(client):

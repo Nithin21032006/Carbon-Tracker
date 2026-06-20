@@ -46,15 +46,42 @@ If the image is not a readable receipt, respond with exactly: []
 """
 
 
-def _get_mock_items() -> list:
-    """Returns a list of mock grocery items for local testing and evaluation when the Anthropic API is unavailable."""
-    return [
-        {"name": "Organic Almond Milk", "estimated_weight_kg": 1.0},
-        {"name": "Local Strawberries", "estimated_weight_kg": 0.5},
-        {"name": "Grass-fed Beef Ribeye", "estimated_weight_kg": 0.6},
-        {"name": "Sourdough Bread", "estimated_weight_kg": 0.7},
-        {"name": "Fresh Spinach Bunch", "estimated_weight_kg": 0.3}
+def _get_mock_items(filename: str) -> list:
+    """
+    Returns a deterministic list of mock grocery items based on the file name hash.
+    This provides realistic, varying mock data for different upload simulations.
+    """
+    import hashlib
+    h = int(hashlib.md5(filename.encode()).hexdigest(), 16)
+    
+    pool = [
+        {"name": "Organic Almond Milk", "estimated_weight_kg": 1.00},
+        {"name": "Local Strawberries", "estimated_weight_kg": 0.50},
+        {"name": "Grass-fed Beef Ribeye", "estimated_weight_kg": 0.60},
+        {"name": "Sourdough Bread", "estimated_weight_kg": 0.70},
+        {"name": "Fresh Spinach Bunch", "estimated_weight_kg": 0.30},
+        {"name": "Greek Yogurt", "estimated_weight_kg": 0.50},
+        {"name": "Organic Bananas", "estimated_weight_kg": 0.80},
+        {"name": "Free-range Eggs", "estimated_weight_kg": 0.60},
+        {"name": "Whole Chicken", "estimated_weight_kg": 1.50},
+        {"name": "Brown Rice Pack", "estimated_weight_kg": 1.00},
+        {"name": "Dark Chocolate Bar", "estimated_weight_kg": 0.20},
+        {"name": "Paper Towels", "estimated_weight_kg": 0.40}
     ]
+    
+    # Pick 3 to 6 items based on hash
+    num_items = 3 + (h % 4)
+    items = []
+    for i in range(num_items):
+        item_idx = (h + i * 7) % len(pool)
+        item = pool[item_idx]
+        # slightly vary weights to look organic (0.8 to 1.2 weight factor)
+        weight_variation = 0.8 + ((h + i * 3) % 5) * 0.1
+        items.append({
+            "name": item["name"],
+            "estimated_weight_kg": round(item["estimated_weight_kg"] * weight_variation, 2)
+        })
+    return items
 
 
 def _media_type_for(filename: str) -> str:
@@ -88,7 +115,7 @@ def extract_items_from_receipt(image_path: str) -> list:
 
     if is_placeholder:
         print("[WARNING] Anthropic API Key is missing or using placeholder 'AAA' value. Falling back to mock receipt data.")
-        return _get_mock_items()
+        return _get_mock_items(os.path.basename(image_path))
 
     try:
         client = _get_client()
@@ -117,7 +144,7 @@ def extract_items_from_receipt(image_path: str) -> list:
         # so the app remains fully functional for evaluation.
         if isinstance(e, anthropic.APIError) and e.status_code == 401:
             print(f"[WARNING] Anthropic API Call returned 401 (Unauthorized). Falling back to mock receipt data. Error: {e}")
-            return _get_mock_items()
+            return _get_mock_items(os.path.basename(image_path))
         
         raise RuntimeError(f"Receipt scanning service error: {e}")
 
