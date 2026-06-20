@@ -11,8 +11,8 @@
   --line: #E0DACB;
   --moss: #3D5A3D;
   --moss-light: #5C7D5C;
-  --terracotta: #C4622D;
-  --gray: #8B8578;
+  --terracotta: #B5521E;
+  --gray: #706A5F;
   --gold: #D4AF37;
   --purple: #6B4C8A;
   --blue: #4A6B8A;
@@ -558,3 +558,17 @@ body {
 footer.report-msg { font-size: 12.5px; color: var(--gray); margin-top: 10px; min-height: 18px; }
 footer.report-msg.success { color: var(--moss); }
 footer.report-msg.error { color: var(--terracotta); }
+
+/* Accessible helper class to hide elements visually while remaining screen reader accessible */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+

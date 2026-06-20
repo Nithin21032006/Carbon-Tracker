@@ -14,10 +14,10 @@
 <div class="app-shell">
   <header class="topbar">
     <a href="/" class="brand">
-      <span class="brand-mark">⎙</span>
+      <span class="brand-mark" aria-hidden="true">⎙</span>
       <span class="brand-text">RECEIPT<span class="brand-sub">/carbon</span></span>
     </a>
-    <nav class="main-nav">
+    <nav class="main-nav" aria-label="Primary Navigation">
       <a href="/" class="{{ 'active' if request.path == '/' else '' }}">Scan</a>
       <a href="/dashboard" class="{{ 'active' if request.path == '/dashboard' else '' }}">Dashboard</a>
       <a href="/challenges" class="{{ 'active' if request.path == '/challenges' else '' }}">Challenges</a>
