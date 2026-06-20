@@ -8,6 +8,7 @@ not laboratory-grade figures — the app is upfront about that in the UI copy.
 """
 
 from functools import lru_cache
+import random
 
 # kg CO2e per kg of product, "farm to retail" average
 EMISSION_FACTORS = {
@@ -258,5 +259,4 @@ def get_top_tip(category_totals: dict) -> dict:
         return {"category": "Other", "tip": "Scan a receipt to get personalized tips."}
     top_category = max(category_totals, key=category_totals.get)
     tips = REDUCTION_TIPS.get(top_category, REDUCTION_TIPS["Other"])
-    import random
     return {"category": top_category, "tip": random.choice(tips)}

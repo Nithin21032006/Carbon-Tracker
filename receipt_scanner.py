@@ -4,6 +4,7 @@ Sends the uploaded receipt image to the Anthropic API and asks for a
 structured JSON list of line items, which carbon_data.py then scores.
 """
 import base64
+import hashlib
 import json
 import os
 import re
@@ -51,7 +52,6 @@ def _get_mock_items(filename: str) -> list:
     Returns a deterministic list of mock grocery items based on the file name hash.
     This provides realistic, varying mock data for different upload simulations.
     """
-    import hashlib
     h = int(hashlib.md5(filename.encode()).hexdigest(), 16)
     
     pool = [

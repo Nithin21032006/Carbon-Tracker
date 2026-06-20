@@ -39,7 +39,8 @@ def load_db() -> dict:
         return _cached_db
 
 
-def save_db(db: dict):
+def save_db(db: dict) -> None:
+    """Save the database dictionary to the local JSON file and update cache."""
     global _cached_db
     with _lock:
         with open(DB_FILE, "w") as f:
@@ -48,6 +49,7 @@ def save_db(db: dict):
 
 
 def add_scan(scan: dict) -> dict:
+    """Add a new receipt scan log to the database and assign it an incremented ID."""
     db = load_db()
     scan["id"] = len(db["scans"]) + 1
     scan["scanned_at"] = datetime.now().isoformat()
@@ -57,21 +59,24 @@ def add_scan(scan: dict) -> dict:
 
 
 def get_scans() -> list:
+    """Retrieve all receipt scans saved in the database."""
     return load_db()["scans"]
 
 
 def get_scans_for_date(d: date) -> list:
+    """Retrieve all receipt scans logged on a specific calendar date."""
     iso = d.isoformat()
     return [s for s in get_scans() if s["scanned_at"][:10] == iso]
 
 
 def get_scan_dates() -> list:
-    """All unique dates (as date objects) on which at least one scan happened."""
+    """Retrieve all unique dates (as date objects) on which at least one scan occurred."""
     dates = {s["scanned_at"][:10] for s in get_scans()}
     return [date.fromisoformat(d) for d in dates]
 
 
-def mark_challenge_complete(challenge_id: str, d: date, co2_saved: float):
+def mark_challenge_complete(challenge_id: str, d: date, co2_saved: float) -> bool:
+    """Mark a daily challenge as completed on a given date if not already completed."""
     db = load_db()
     iso = d.isoformat()
     already = any(c["date"] == iso and c["challenge_id"] == challenge_id for c in db["completed_challenges"])
@@ -84,21 +89,25 @@ def mark_challenge_complete(challenge_id: str, d: date, co2_saved: float):
 
 
 def get_completed_challenges() -> list:
+    """Retrieve the log of all completed challenges."""
     return load_db()["completed_challenges"]
 
 
 def get_earned_badges() -> list:
+    """Retrieve list of all earned badge IDs."""
     return load_db()["earned_badges"]
 
 
-def add_earned_badge(badge_id: str):
+def add_earned_badge(badge_id: str) -> None:
+    """Save an earned badge ID in the database if not already present."""
     db = load_db()
     if badge_id not in db["earned_badges"]:
         db["earned_badges"].append(badge_id)
         save_db(db)
 
 
-def update_longest_streak(streak: int):
+def update_longest_streak(streak: int) -> int:
+    """Update the user's historical longest consecutive day scanning streak."""
     db = load_db()
     if streak > db["longest_streak"]:
         db["longest_streak"] = streak
@@ -107,8 +116,10 @@ def update_longest_streak(streak: int):
 
 
 def get_total_co2_saved() -> float:
+    """Retrieve the total cumulative CO2 saved by completing challenges."""
     return load_db()["total_co2_saved"]
 
 
-def reset_all():
+def reset_all() -> None:
+    """Reset the database to default initial empty schemas."""
     save_db(dict(DEFAULT_DB))
