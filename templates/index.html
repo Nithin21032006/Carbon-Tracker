@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Scan a Receipt — Carbon Tracker{% endblock %}
+{% block content %}
+
+<div class="toast-stack" id="toastStack"></div>
+
+<section class="hero">
+  <h1>Every receipt tells a <span class="accent">carbon story.</span></h1>
+  <p>Upload a photo of any grocery or shopping receipt. We'll read the line items, estimate the footprint behind each one, and show you where it's coming from.</p>
+</section>
+
+<div class="dropzone" id="dropzone">
+  <div class="dropzone-icon">⎙</div>
+  <h3>Drop a receipt photo here</h3>
+  <p>JPG, PNG, or WEBP — up to 10MB</p>
+  <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/jpg">
+  <button class="btn" id="chooseBtn">Choose Photo</button>
+  <img id="previewImg" class="preview-thumb" style="display:none;">
+</div>
+
+<div class="scan-status" id="scanStatus" style="display:none;"></div>
+
+<div id="receiptResult"></div>
+<div id="tipResult"></div>
+
+<div style="text-align:center; margin-top: 36px;">
+  <a href="/dashboard" class="btn btn-outline">View Dashboard →</a>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/scan.js') }}"></script>
+{% endblock %}

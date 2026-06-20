@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Weekly Report — Carbon Tracker{% endblock %}
+{% block content %}
+
+<div class="section-title">Weekly Progress Report</div>
+
+<div class="note-banner">
+  Sending this by email requires SMTP credentials. Set <code>EMAIL_HOST</code>, <code>EMAIL_PORT</code>,
+  <code>EMAIL_USER</code>, and <code>EMAIL_PASSWORD</code> as environment variables (e.g. a Gmail app password
+  or SendGrid SMTP relay) to enable real sending. Until then, this page renders the exact report content
+  that would be emailed.
+</div>
+
+<div class="report-controls">
+  <input type="email" id="emailInput" placeholder="your@email.com">
+  <button class="btn btn-terracotta" id="sendBtn">Send Report</button>
+</div>
+<footer class="report-msg" id="sendMsg"></footer>
+
+<div class="report-frame-wrap" style="margin-top:20px;">
+  {{ report_html | safe }}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('sendBtn').addEventListener('click', async () => {
+  const email = document.getElementById('emailInput').value.trim();
+  const msg = document.getElementById('sendMsg');
+  msg.className = 'report-msg';
+  if (!email) { msg.className = 'report-msg error'; msg.textContent = 'Enter an email address first.'; return; }
+
+  msg.textContent = 'Sending…';
+  try {
+    const res = await fetch('/api/report/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      msg.className = 'report-msg error';
+      msg.textContent = data.error;
+    } else {
+      msg.className = 'report-msg success';
+      msg.textContent = `Sent to ${data.sent_to}.`;
+    }
+  } catch (err) {
+    msg.className = 'report-msg error';
+    msg.textContent = 'Could not reach the server.';
+  }
+});
+</script>
+{% endblock %}

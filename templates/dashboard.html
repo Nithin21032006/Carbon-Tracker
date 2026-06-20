@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Carbon Tracker{% endblock %}
+{% block content %}
+
+<div class="section-title">Overview</div>
+<div class="stat-row" id="statRow">
+  <div class="stat-box"><div class="stat-value">—</div><div class="stat-label">Total kg CO2e</div></div>
+  <div class="stat-box streak"><div class="stat-value">—</div><div class="stat-label">Day streak</div></div>
+  <div class="stat-box saved"><div class="stat-value">—</div><div class="stat-label">kg CO2e saved</div></div>
+</div>
+
+<div id="tipSlot"></div>
+
+<div class="dash-grid" style="margin-top: 24px;">
+  <div class="card">
+    <div class="section-title">Category Breakdown</div>
+    <div id="categoryBreakdown"></div>
+  </div>
+  <div class="card">
+    <div class="section-title">Recent Scans</div>
+    <div class="scan-list" id="scanList"></div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

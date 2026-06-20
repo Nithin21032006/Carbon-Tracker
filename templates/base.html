@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Receipt — Carbon Tracker{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% block extra_head %}{% endblock %}
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <a href="/" class="brand">
+      <span class="brand-mark">⎙</span>
+      <span class="brand-text">RECEIPT<span class="brand-sub">/carbon</span></span>
+    </a>
+    <nav class="main-nav">
+      <a href="/" class="{{ 'active' if request.path == '/' else '' }}">Scan</a>
+      <a href="/dashboard" class="{{ 'active' if request.path == '/dashboard' else '' }}">Dashboard</a>
+      <a href="/challenges" class="{{ 'active' if request.path == '/challenges' else '' }}">Challenges</a>
+      <a href="/report/weekly" class="{{ 'active' if request.path == '/report/weekly' else '' }}">Report</a>
+    </nav>
+  </header>
+  <main class="page">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+{% block scripts %}{% endblock %}
+</body>
+</html>

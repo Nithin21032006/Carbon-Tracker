@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Challenges — Carbon Tracker{% endblock %}
+{% block content %}
+
+<div class="challenge-hero" id="challengeHero">
+  <div class="eyebrow">Today's Challenge</div>
+  <h2>Loading…</h2>
+  <p></p>
+</div>
+
+<div class="section-title">Badges</div>
+<div class="progress-pill" id="badgeProgress">— / — earned</div>
+<div class="badge-grid" id="badgeGrid"></div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/challenges.js') }}"></script>
+{% endblock %}
