@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: carbon-tracker
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: EMAIL_HOST
+        sync: false
+      - key: EMAIL_PORT
+        sync: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASSWORD
+        sync: false
+      - key: SMTP_FROM_NAME
+        sync: false
+    # NOTE: To persist database uploads across server restarts on Render,
+    # you can attach a persistent disk. Note that disks are only supported
+    # on paid instance tiers (starting at $7/month for Starter + $0.25/GB/month for disk).
+    #
+    # To enable, uncomment the disk configuration below:
+    # disk:
+    #   name: carbon-tracker-data
+    #   mountPath: /opt/render/project/src/data
+    #   sizeGB: 1
